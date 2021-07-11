@@ -36,7 +36,6 @@ app.use((req, res, next) => {
     }
 })
 
-
 app.get('/values', async (req, res) => {
     res.json(await mqtt.requestValues())
 })
