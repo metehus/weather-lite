@@ -5,7 +5,6 @@ const { nanoid } = require('nanoid')
 const cors = require('cors')
 const mqtt = require('./mqtt.js')()
 
-
 let db
 
 const mongo = new MongoClient(process.env.MONGODB, {
