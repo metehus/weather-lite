@@ -18,7 +18,7 @@ mongo.connect(err => {
     mqtt.handleInsert = values => {
         db.collection('values')
             .insertMany(values
-                .map(v => ({ _id: nanoid(64), ...v.map(n => Number(n)) })))
+                .map(v => ({ _id: nanoid(64), ...v })))
     }
 })
 

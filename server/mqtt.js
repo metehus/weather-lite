@@ -27,7 +27,7 @@ class Mqtt {
     }
 
     handleData(message) {
-        const [t, h, wt, w] = message.toString().split(', ')
+        const [t, h, wt, w] = message.toString().split(', ').map(v => Number(v))
         this.dataCache.push({
             t, h, wt, w, at: new Date().getTime()
         })
