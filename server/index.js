@@ -18,7 +18,7 @@ mongo.connect(err => {
     mqtt.handleInsert = values => {
         db.collection('values')
             .insertMany(values
-                .map(v => ({ _id: nanoid(64), ...v })))
+                .map(v => ({ _id: nanoid(64), ...v.map(n => Number(n)) })))
     }
 })
 
@@ -41,9 +41,11 @@ app.get('/values', async (req, res) => {
 })
 
 app.post('/actions/relay', (req, res) => {
-    mqtt.sendRelayRequest(req.body.value)
-    res.json({
-        success: true
+    mqtt.sendRelayRequest(req.body.value, undefined, err => {
+        res.json({
+            success: !err,
+            error: err
+        })
     })
 })
 
@@ -57,8 +59,8 @@ app.get('/history', (req, res) => {
         }
         res.json({
             data: docs.map(v => ([
-                v.t, v.h, v.wt, v.w
-            ]))
+                v.t, v.h, v.wt, v.w, v.at
+            ].map(n => Number(n))))
         })
     })
 })
