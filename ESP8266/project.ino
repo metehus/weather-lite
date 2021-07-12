@@ -11,7 +11,7 @@
 #define WATER_SENSOR_PIN A0
 #define RELAY_PIN 13
 
-#define UPDATE_INTERVAL 60000 // ms
+#define UPDATE_INTERVAL 1800000 // ms
 // #define UPDATE_INTERVAL 3000        // ms
 
 DHT dht(DHT_PIN, DHT11);
