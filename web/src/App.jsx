@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import { Button, Card, CardActions, CardContent, CircularProgress, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import ThermostatIcon from '@material-ui/icons/Thermostat';
-import OpacityRoundedIcon from '@material-ui/icons/OpacityRounded';
-import WaterRoundedIcon from '@material-ui/icons/WaterRounded';
-import WeatherPouringIcon from 'mdi-material-ui/WeatherPouring'
-import RefreshIcon from '@material-ui/icons/Refresh';
 import Chart from 'chart.js/auto'
 import moment from 'moment'
+import { Box, Button, Card, CardContent, CircularProgress, Container, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import ThermostatIcon from '@mui/icons-material/Thermostat';
+import OpacityRoundedIcon from '@mui/icons-material/OpacityRounded';
+import WaterRoundedIcon from '@mui/icons-material/WaterRounded';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import WeatherPouringIcon from 'mdi-material-ui/WeatherPouring'
+
+const apiUrl = import.meta.env.VITE_API_URL
+const apiAUth = import.meta.env.VITE_API_AUTH
 
 export default function Index() {
 
@@ -23,10 +23,10 @@ export default function Index() {
 
   const refresh = () => {
     setCurrentValue(null)
-    fetch(`${process.env.GATSBY_API_URL}/values`, {
+    fetch(`${apiUrl}/values`, {
       headers: {
         'content-type': 'application/json',
-        authorization: process.env.GATSBY_API_AUTH
+        authorization: apiAUth
       }
     })
       .then(r => r.json())
@@ -38,10 +38,10 @@ export default function Index() {
 
   const getHistory = () => {
     const from = new Date().getTime() - (2 * 24 * 60 * 60 * 1000)
-    fetch(`${process.env.GATSBY_API_URL}/history?from=${from}`, {
+    fetch(`${apiUrl}/history?from=${from}`, {
       headers: {
         'content-type': 'application/json',
-        authorization: process.env.GATSBY_API_AUTH
+        authorization: apiAUth
       }
     })
       .then(r => r.json())
@@ -52,10 +52,10 @@ export default function Index() {
   }
 
   const changeRelayState = (value) => () => {
-    fetch(`${process.env.GATSBY_API_URL}/actions/relay`, {
+    fetch(`${apiUrl}/actions/relay`, {
       headers: {
         'content-type': 'application/json',
-        authorization: process.env.GATSBY_API_AUTH
+        authorization: apiAUth
       },
       method: 'post',
       body: JSON.stringify({ value })
@@ -67,7 +67,7 @@ export default function Index() {
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <Box my={4}>
         <Typography variant="h4" component="h1" gutterBottom>
           Weather station lite
@@ -214,13 +214,16 @@ function HistoryChart({data}) {
           pointStyle: 'line'
         }]
       },
-      options: {}
+      options: {},
+  
     }
 
-    new Chart(
+    const chart = new Chart(
       tempRef.current,
       config
     )
+
+    return () => chart.destroy()
   }, [])
 
   useEffect(() => {
@@ -240,10 +243,12 @@ function HistoryChart({data}) {
       options: {}
     }
 
-    new Chart(
+    const chart = new Chart(
       humRef.current,
       config
     )
+
+    return () => chart.destroy()
   }, [])
 
   return <div>

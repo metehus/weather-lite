@@ -1,6 +1,6 @@
 server/node_modules
 server/.env
-
+build
 node_modules
 .env
 env.h
